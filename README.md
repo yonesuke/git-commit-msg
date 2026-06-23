@@ -93,7 +93,7 @@ You can register the remote execution straight into your ~/.gitconfig as a nativ
 
 ```bash
 # If you prefer to use uv (isolated environment with Python 3.10+)
-git config --global alias.cm '!git commit -m "$(uv run --no-project --python \">=3.10\" \"https://raw.githubusercontent.com/yonesuke/git-commit-msg/main/git-commit-msg.py\")"'
+git config --global alias.cm '!f() { msg=$(uv run --no-project --python ">=3.10" "https://raw.githubusercontent.com/yonesuke/git-commit-msg/main/git-commit-msg.py" 2>/dev/null); if [ -n "$msg" ]; then git commit -m "$msg"; else echo "Failed to generate commit message." >&2; return 1; fi; }; f'
 # If you prefer to use Python directly
 git config --global alias.cm '!git commit -m "$(curl -s \"https://raw.githubusercontent.com/yonesuke/git-commit-msg/main/git-commit-msg.py\" | python)"'
 ```
