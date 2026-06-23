@@ -21,10 +21,10 @@ Just run it straight from the repository—no installation needed:
 
 ```bash
 # Using uv (recommended, isolated with Python 3.10+)
-git commit -m "$(uv run --no-project --python \">=3.10\" \"https://raw.githubusercontent.com/yonesuke/git-commit-msg/main/git-commit-msg.py\")"
+git commit -m "$(uv run --no-project --python ">=3.10" "https://raw.githubusercontent.com/yonesuke/git-commit-msg/main/git-commit-msg.py")"
 
 # Or pipe directly into Python 3.10+
-git commit -m "$(curl -s \"https://raw.githubusercontent.com/yonesuke/git-commit-msg/main/git-commit-msg.py\" | python)"
+git commit -m "$(curl -s "https://raw.githubusercontent.com/yonesuke/git-commit-msg/main/git-commit-msg.py" | python)"
 ```
 
 That's it! If you have a config file at `~/.config/git-commit-msg/config.json` (see Configuration below), it'll just work.
@@ -75,13 +75,13 @@ Pick whatever fits your workflow best.
 
 ```bash
 # 1. uv + remote URL (simplest, always fresh with Python 3.10+)
-git commit -m "$(uv run --no-project --python \">=3.10\" \"https://raw.githubusercontent.com/yonesuke/git-commit-msg/main/git-commit-msg.py\")"
+git commit -m "$(uv run --no-project --python ">=3.10" "https://raw.githubusercontent.com/yonesuke/git-commit-msg/main/git-commit-msg.py")"
 
 # 2. Python + curl pipe (no dependencies, requires Python 3.10+)
-git commit -m "$(curl -s \"https://raw.githubusercontent.com/yonesuke/git-commit-msg/main/git-commit-msg.py\" | python)"
+git commit -m "$(curl -s "https://raw.githubusercontent.com/yonesuke/git-commit-msg/main/git-commit-msg.py" | python)"
 
 # 3. uv + local file (faster if you cache it, with Python 3.10+)
-uv run --no-project --python \">=3.10\" ./git-commit-msg.py
+uv run --no-project --python ">=3.10" ./git-commit-msg.py
 
 # 4. Pure Python (requires Python 3.10+)
 python ./git-commit-msg.py
@@ -95,7 +95,7 @@ You can register the remote execution straight into your ~/.gitconfig as a nativ
 # If you prefer to use uv (isolated environment with Python 3.10+)
 git config --global alias.cm '!f() { msg=$(uv run --no-project --python ">=3.10" "https://raw.githubusercontent.com/yonesuke/git-commit-msg/main/git-commit-msg.py" 2>/dev/null); if [ -n "$msg" ]; then git commit -m "$msg"; else echo "Failed to generate commit message." >&2; return 1; fi; }; f'
 # If you prefer to use Python directly
-git config --global alias.cm '!git commit -m "$(curl -s \"https://raw.githubusercontent.com/yonesuke/git-commit-msg/main/git-commit-msg.py\" | python)"'
+git config --global alias.cm '!f() { msg=$(curl -sSL "https://raw.githubusercontent.com/yonesuke/git-commit-msg/main/git-commit-msg.py" | python 2>/dev/null); if [ -n "$msg" ]; then git commit -m "$msg"; else echo "Failed to generate commit message." >&2; return 1; fi; }; f'
 ```
 
 Once set, you can simply run:
@@ -119,7 +119,7 @@ chmod +x ~/.local/bin/git-commit-msg.py
 git commit -m "$(python ~/.local/bin/git-commit-msg.py)"
 
 # Or via uv with Python 3.10+
-git commit -m "$(uv run --no-project --python \">=3.10\" ~/.local/bin/git-commit-msg.py)"
+git commit -m "$(uv run --no-project --python ">=3.10" ~/.local/bin/git-commit-msg.py)"
 ```
 
 
