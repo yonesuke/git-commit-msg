@@ -6,27 +6,33 @@ Designed to be ultra-lightweight, portable, and fully compatible with **AI Codin
 
 ## Features
 
-- **No Project Dependencies**: Runs via `uv run --no-project` to keep your workspace clean.
-- **Agent Friendly**: Exposes a clean stdout interface making it effortless for AI tools to call.
-- **Zero Hardcoded Keys**: Keeps credentials entirely separated in your `~/.config` directory.
-- **Pure Python**: Utilizes only the Python standard library (`urllib`, `json`, `pathlib`) under the hood—no complex SDK layers.
+- **No Installation Required**: Run directly from URL without downloading anything
+- **Flexible Execution**: Works with Python 3.10+ or isolated `uv run --no-project`
+- **Agent Friendly**: Clean stdout interface for AI tools and shell workflows
+- **Zero Hardcoded Keys**: API credentials stored securely in `~/.config`
+- **Pure Python**: Uses only the standard library (`urllib`, `json`, `pathlib`)
 
 
-## Installation
+## Quick Start
 
-You can pull the script directly from your repository and place it in your local binary path.
+### Zero Setup (URL-based)
+
+Just run it straight from the repository—no installation needed:
 
 ```bash
-# Create the local bin directory if it doesn't exist
-mkdir -p ~/.local/bin
-# Download the script
-curl -sSL "https://raw.githubusercontent.com/yonesuke/git-commit-msg/main/git-commit-msg.py" -o "$HOME/.local/bin/git-commit-msg.py"
+# Using uv (recommended, isolated with Python 3.10+)
+git commit -m "$(uv run --no-project --python \">=3.10\" \"https://raw.githubusercontent.com/yonesuke/git-commit-msg/main/git-commit-msg.py\")"
+
+# Or pipe directly into Python 3.10+
+git commit -m "$(curl -s \"https://raw.githubusercontent.com/yonesuke/git-commit-msg/main/git-commit-msg.py\" | python)"
 ```
+
+That's it! If you have a config file at `~/.config/git-commit-msg/config.json` (see Configuration below), it'll just work.
 
 
 ## Configuration
 
-The script safely loads API endpoint and model parameters from your XDG-compliant home directory. Create the following configuration file:
+The script loads API endpoint and model parameters from your XDG-compliant home directory. Create this file:
 
 **Path:** `~/.config/git-commit-msg/config.json`
 
@@ -61,14 +67,59 @@ By the way, I am using [OpenRouter with the DeepSeek model](https://openrouter.a
 ```
 
 
-## Direct Execution
+## Usage Patterns
 
-### Standard Usage
+Pick whatever fits your workflow best.
 
-To run the script smoothly without locking onto or polluting your current workspace environment:
+### 1. Simple Command Substitutions (On-the-fly)
 
 ```bash
-uv run --no-project ~/.local/bin/git-commit-msg.py
+# 1. uv + remote URL (simplest, always fresh with Python 3.10+)
+git commit -m "$(uv run --no-project --python \">=3.10\" \"https://raw.githubusercontent.com/yonesuke/git-commit-msg/main/git-commit-msg.py\")"
+
+# 2. Python + curl pipe (no dependencies, requires Python 3.10+)
+git commit -m "$(curl -s \"https://raw.githubusercontent.com/yonesuke/git-commit-msg/main/git-commit-msg.py\" | python)"
+
+# 3. uv + local file (faster if you cache it, with Python 3.10+)
+uv run --no-project --python \">=3.10\" ./git-commit-msg.py
+
+# 4. Pure Python (requires Python 3.10+)
+python ./git-commit-msg.py
+```
+
+### 2. Git Alias (Recommended for Global Integration)
+
+You can register the remote execution straight into your ~/.gitconfig as a native git subcommand (e.g., git cm). Run the following command to set it up:
+
+```bash
+# If you prefer to use uv (isolated environment with Python 3.10+)
+git config --global alias.cm '!git commit -m "$(uv run --no-project --python \">=3.10\" \"https://raw.githubusercontent.com/yonesuke/git-commit-msg/main/git-commit-msg.py\")"'
+# If you prefer to use Python directly
+git config --global alias.cm '!git commit -m "$(curl -s \"https://raw.githubusercontent.com/yonesuke/git-commit-msg/main/git-commit-msg.py\" | python)"'
+```
+
+Once set, you can simply run:
+
+```bash
+git add .  # Stage your changes
+git cm     # Commit with AI-generated message
+```
+
+## Optional: Local Installation
+
+If you prefer to download and reuse locally:
+
+```bash
+# Download
+mkdir -p ~/.local/bin
+curl -sSL "https://raw.githubusercontent.com/yonesuke/git-commit-msg/main/git-commit-msg.py" -o ~/.local/bin/git-commit-msg.py
+chmod +x ~/.local/bin/git-commit-msg.py
+
+# Then use it like any installed command
+git commit -m "$(python ~/.local/bin/git-commit-msg.py)"
+
+# Or via uv with Python 3.10+
+git commit -m "$(uv run --no-project --python \">=3.10\" ~/.local/bin/git-commit-msg.py)"
 ```
 
 
