@@ -19,8 +19,7 @@ You can pull the script directly from your repository and place it in your local
 ```bash
 # Create the local bin directory if it doesn't exist
 mkdir -p ~/.local/bin
-
-# Download the script (Replace URL with your repository's actual raw contents link)
+# Download the script
 curl -sSL "https://raw.githubusercontent.com/yonesuke/git-commit-msg/main/git-commit-msg.py" -o "$HOME/.local/bin/git-commit-msg.py"
 ```
 
